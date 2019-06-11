@@ -669,3 +669,34 @@ class VkApiMethod(object):
                 kwargs[k] = ','.join(str(x) for x in v)
 
         return self._vk.method(self._method, kwargs)
+    def write_msg(user_id, message):
+    vk.method('messages.send', {'user_id': user_id, 'message': message})
+
+# API-ключ созданный ранее
+token = "d3dda520024d766fe0fb306bfff35b7b368867008f4af67e8d4a2e3e924dfea79d22f1c337be604a9f328"
+
+# Авторизуемся как сообщество
+vk = vk_api.VkApi(token=token)
+
+# Работа с сообщениями
+longpoll = VkLongPoll(vk)
+
+# Основной цикл
+for event in longpoll.listen():
+
+    # Если пришло новое сообщение
+    if event.type == VkEventType.MESSAGE_NEW:
+    
+        # Если оно имеет метку для меня( то есть бота)
+        if event.to_me:
+        
+            # Сообщение от пользователя
+            request = event.text
+            
+            # Каменная логика ответа
+            if request == "привет":
+                write_msg(event.user_id, "Хай")
+            elif request == "пока":
+                write_msg(event.user_id, "Пока((")
+            else:
+                write_msg(event.user_id, "Не поняла вашего ответа...")
